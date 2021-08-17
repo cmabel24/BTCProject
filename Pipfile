@@ -1,0 +1,56 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+api = {editable = true, path = "."}
+bitstring = "*"
+celery = {extras = ["auth", "redis"], version = "*"}
+cerberus = "*"
+channels = "*"
+channels-redis = "*"
+django = "*"
+django-allow-cidr = "*"
+django-celery-beat = "*"
+django-celery-results = "*"
+django-cors-headers = "*"
+django-extensions = "*"
+django-filter = "*"
+django-guardian = "*"
+django-pgviews-redux = "*"
+django-reversion = "*"
+django-shortuuidfield = "*"
+djangorestframework = "*"
+djangorestframework-datatables = "*"
+drf-writable-nested = "*"
+ecdsa = "*"
+embit = "*"
+environs = {extras = ["django"], version = "*"}
+flower = "*"
+gunicorn = "*"
+httpx = "*"
+lnurl = "*"
+psycopg2 = "*"
+pypng = "*"
+pyqrcode = "*"
+pyscss = "*"
+sentry-sdk = "*"
+trio = "*"
+uvicorn = "*"
+drf-nested-routers = "*"
+
+[dev-packages]
+black = "*"
+pylint = "*"
+pylint-django = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-trio = "*"
+trio-typing = "*"
+
+[requires]
+python_version = "3.9"
+
+[pipenv]
+allow_prereleases = true
