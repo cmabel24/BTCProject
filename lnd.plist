@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+        <key>KeepAlive</key>
+        <true/>
+        <key>Label</key>
+        <string>go.lnd</string>
+        <key>ProgramArguments</key>
+        <array>
+                <string>/Users/cmabel/Documents/src/go/bin/lnd</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>StandardErrorPath</key>
+        <string>/Users/cmabel/Library/Application\ Support/Lnd/logs/lnd.log</string>
+        <key>StandardOutPath</key>
+        <string>/Users/cmabel/Library/Application\ Support/Lnd/logs/lnd.log</string>
+        <key>WorkingDirectory</key>
+        <string>/Users/cmabel/Library/Application\ Support/Lnd/</string>
+</dict>
+</plist>
