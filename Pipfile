@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 api = {editable = true, path = "."}
+base58 = "*"
 bitstring = "*"
 celery = {extras = ["auth", "redis"], version = "*"}
 cerberus = "*"
@@ -23,6 +24,7 @@ django-reversion = "*"
 django-shortuuidfield = "*"
 djangorestframework = "*"
 djangorestframework-datatables = "*"
+drf-nested-routers = "*"
 drf-writable-nested = "*"
 ecdsa = "*"
 embit = "*"
@@ -38,16 +40,19 @@ pyscss = "*"
 sentry-sdk = "*"
 trio = "*"
 uvicorn = "*"
-drf-nested-routers = "*"
-django-bitcoin = "*"
-base58 = "*"
 
 [dev-packages]
 black = "*"
+faker = "*"
+factory-boy = "*"
+isort = "*"
+mypy = "*"
 pylint = "*"
 pylint-django = "*"
 pytest = "*"
 pytest-cov = "*"
+pytest-django = "*"
+pytest-socket = "*"
 pytest-trio = "*"
 trio-typing = "*"
 

@@ -1,43 +1,22 @@
 import uuid
-from django.contrib.auth import get_user_model
 import datetime
-import random
-import hashlib
-import base64
-import pytz
-from decimal import Decimal
+from django.contrib.auth import get_user_model
 from django.db import models
-from django.contrib.sites.models import Site
-from django.contrib.auth.models import User
 
-# from django_bitcoin.utils import *
-# from django_bitcoin.utils import bitcoind
-# from django_bitcoin import settings
-
+# import django.dispatch
 from django.utils.translation import ugettext as _
 
-import django.dispatch
-
-# import jsonrpc
-
-# from BCAddressField import is_valid_btc_address
-
-from django.db import transaction as db_transaction
-from celery import task
-
-# from distributedlock import distributedlock, MemcachedLock, LockNotAcquiredError
-from django.db.models import Avg, Max, Min, Sum
+User = get_user_model()
 
 
-balance_changed = django.dispatch.Signal(
-    providing_args=["changed", "transaction", "bitcoinaddress"]
-)
-balance_changed_confirmed = django.dispatch.Signal(
-    providing_args=["changed", "transaction", "bitcoinaddress"]
-)
+# balance_changed = django.dispatch.Signal(
+#     providing_args=["changed", "transaction", "bitcoinaddress"]
+# )
+# balance_changed_confirmed = django.dispatch.Signal(
+#     providing_args=["changed", "transaction", "bitcoinaddress"]
+# )
 
 
-@task()
 def update_wallet_balance(wallet_id):
     w = Wallet.objects.get(id=wallet_id)
     Wallet.objects.filter(id=wallet_id).update(last_balance=w.total_balance_sql())
@@ -68,22 +47,6 @@ class PubKey(models.Model):
     )
     key = models.ForeignKey(Key, on_delete=models.CASCADE, related_name="pub_keys")
     xpub1 = models.CharField(max_length=130, unique=True)
-
-    {
-        "name": "Copeland - Wallet",
-        "addressType": "P2SH-P2WSH",
-        "network": "mainnet",
-        "client": {
-            "type": "private",
-            "url": "http://bitcoind.localhost:8080",
-            "username": "cmabel",
-        },
-        "quorom": {
-            "requiredSigners": 1,
-            "totalSigners": 1,
-        },
-        "extendedPublicKeys": [{}],
-    }
 
 
 class Wallet(models.Model):
@@ -121,5 +84,5 @@ class Wallet(models.Model):
     url = models.URLField("http://bitcoind.localhost:8080")
     username = models.TextField(unique=True, max_length=20)
     # "qourum"
-    requiredSigners = models.CharField(1)
-    totalSigners = models.CharField(1)
+    requiredSigners = models.TextField(1)
+    totalSigners = models.TextField(1)

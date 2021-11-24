@@ -7,7 +7,7 @@ from .models import Key, Wallet
 
 
 class IndexView(generic.ListView):
-    template_name = "polls/index.html"
+    template_name = "wallets/index.html"
     context_object_name = "latest_question_list"
 
     def get_queryset(self):
@@ -17,12 +17,12 @@ class IndexView(generic.ListView):
 
 class DetailView(generic.DetailView):
     model = Wallet
-    template_name = "polls/detail.html"
+    template_name = "wallets/detail.html"
 
 
 class ResultsView(generic.DetailView):
     model = Wallet
-    template_name = "polls/results.html"
+    template_name = "wallets/results.html"
 
 
 def vote(request, wallet_id):
@@ -33,7 +33,7 @@ def vote(request, wallet_id):
         # Redisplay the question voting form.
         return render(
             request,
-            "polls/detail.html",
+            "wallets/detail.html",
             {
                 "Wallet": Wallet,
                 "error_message": "You didn't select an amount.",
@@ -45,4 +45,4 @@ def vote(request, wallet_id):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return HttpResponseRedirect(reverse("polls:results", args=(wallet.id,)))
+        return HttpResponseRedirect(reverse("wallets:results", args=(wallet.id,)))

@@ -26,6 +26,6 @@ DJANGO_SETTINGS_MODULE = "api.settings"
 django_find_project = false
 python_files = "tests.py test_*.py _tests.py"
 filterwarnings = [
-    "ignore::django.utils.deprecations.RemovedInDjango40Warning",
-    "ignore::django.utils.deprecations.RemovedInDjango41Warning"
+    "ignore::django.utils.deprecation.RemovedInDjango40Warning",
+    "ignore::django.utils.deprecation.RemovedInDjango41Warning"
 ]
