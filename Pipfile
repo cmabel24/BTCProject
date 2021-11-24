@@ -39,6 +39,8 @@ sentry-sdk = "*"
 trio = "*"
 uvicorn = "*"
 drf-nested-routers = "*"
+django-bitcoin = "*"
+base58 = "*"
 
 [dev-packages]
 black = "*"
