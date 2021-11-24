@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from views.py import Wallet
+from ...wallets.models import Wallet
 
 # Create your tests here.
 class WalletTestCase(TestCase):

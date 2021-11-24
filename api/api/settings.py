@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_bitcoin",
     # Local
-    "polls",
+    "wallets",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
