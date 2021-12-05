@@ -1,10 +1,14 @@
-import uuid
-import datetime
+from decimal import Decimal
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
+from django.core.validators import EmailValidator
 from django.db import models
-
-# import django.dispatch
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ugettext as _
+import datetime
+import uuid
+from django.db import transaction as db_transaction
+from django.db.models import Avg, Max, Min, Sum
 
 User = get_user_model()
 
@@ -20,9 +24,6 @@ User = get_user_model()
 def update_wallet_balance(wallet_id):
     w = Wallet.objects.get(id=wallet_id)
     Wallet.objects.filter(id=wallet_id).update(last_balance=w.total_balance_sql())
-
-
-User = get_user_model()
 
 
 class Key(models.Model):
@@ -75,7 +76,7 @@ class Wallet(models.Model):
         super(Wallet, self).save(*args, **kwargs)
         # super(Wallet, self).save(*args, **kwargs)
 
-    keys = models.ManyToManyField(PubKey, related_name="wallet")
+    keys = models.ManyToManyField(PubKey, related_name="pub_keys")
     name = models.TextField(unique=True)
     addressType = models.TextField(max_length=9)
     network = models.TextField(max_length=7, unique=True)
@@ -86,3 +87,72 @@ class Wallet(models.Model):
     # "qourum"
     requiredSigners = models.TextField(1)
     totalSigners = models.TextField(1)
+
+
+class Transaction(models.Model):
+    created_at = models.DateTimeField(default=datetime.datetime.now)
+    amount = models.DecimalField(
+        max_digits=16, decimal_places=8, default=Decimal("0.0")
+    )
+    address = models.CharField(max_length=50)
+
+
+# class DepositTransaction(models.Model):
+
+#     created_at = models.DateTimeField(default=datetime.datetime.now)
+#     # address = models.ForeignKey("BitcoinAddress")
+
+#     amount = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal(0))
+#     description = models.CharField(max_length=100, blank=True, null=True, default=None)
+
+#     wallet = models.ForeignKey("Wallet")
+
+#     under_execution = models.BooleanField(default=False)  # execution fail
+#     transaction = models.ForeignKey("WalletTransaction", null=True, default=None)
+
+#     confirmations = models.IntegerField(default=0)
+#     txid = models.CharField(max_length=100, blank=True, null=True)
+
+#     def __unicode__(self):
+#         return self.address.address + u", " + unicode(self.amount)
+
+
+class OutgoingTransaction(models.Model):
+
+    created_at = models.DateTimeField(default=datetime.datetime.now)
+    expires_at = models.DateTimeField(default=datetime.datetime.now)
+    executed_at = models.DateTimeField(null=True, default=None)
+    under_execution = models.BooleanField(default=False)  # execution fail
+    to_bitcoinaddress = models.CharField(max_length=50, blank=True)
+    amount = models.DecimalField(
+        max_digits=16, decimal_places=8, default=Decimal("0.0")
+    )
+    # description = models.CharField(max_length=100, blank=True)
+
+    txid = models.CharField(max_length=100, blank=True, null=True, default=None)
+
+    def unicode(self):
+        return (
+            unicode(self.created_at)
+            + ": "
+            + self.to_bitcoinaddress
+            + u", "
+            + unicode(self.amount)
+        )
+
+
+class BitcoinAddress(models.Model):
+    address = models.CharField(max_length=50, unique=True)
+    created_at = models.DateTimeField(default=datetime.datetime.now)
+    active = models.BooleanField(default=False)
+    least_received = models.DecimalField(
+        max_digits=16, decimal_places=8, default=Decimal(0)
+    )
+    least_received_confirmed = models.DecimalField(
+        max_digits=16, decimal_places=8, default=Decimal(0)
+    )
+    label = models.CharField(max_length=50, blank=True, null=True, default=None)
+
+    # wallet = models.ForeignKey("Wallet", null=True, related_name="addresses")
+
+    migrated_to_transactions = models.BooleanField(default=True)
