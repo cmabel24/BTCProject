@@ -1,11 +1,83 @@
+"Librarys to generate random items to test"
+from typing import Dict, List
+from typing_extensions import Self
+from django.contrib.auth import get_user_model, login
+from django.db.models.expressions import Value
 from django.test import TestCase
+from factory.django import DjangoModelFactory
+from faker import Faker
+from faker.providers import BaseProvider
+from wallets.models import PubKey, Transaction, Wallet
+import factory
 
-from wallets.models import Wallet
+User = get_user_model()
+
+SEED = "c4b49e22a03f6ddf1be4901177fdaa2f"
+fake = Faker()
+
+# Creating a Fake User to test logging in
+class UsernameProvider(BaseProvider):
+    """Username provider"""
+
+    def username(self):  # pylint: disable=no-self-use
+        """Random username"""
+        return fake.email().rpartition("@")[0]
+
+
+factory.Faker.add_provider(UsernameProvider)
+fake.add_provider(UsernameProvider)
+
+
+class UserFactory(DjangoModelFactory):
+    """
+    Create a randomly generated base user this can be extended by:
+    UserFactory.build(is_staff=True)
+    """
+
+    email = factory.Faker("email")
+    username = factory.Faker("username")
+    password = factory.Faker("password")
+    first_name = factory.Faker("first_name")
+    last_name = factory.Faker("last_name")
+
+    class Meta:
+        """Meta Data"""
+
+    model = User
+
+    @factory.post_generation
+    def groups(self, create, extracted, **kwargs):
+        """Add the user groups"""
+        if not create:
+            # Simple build, do nothing.
+            return
+
+        if extracted:
+            # A list of groups were passed in, use them
+            for group in extracted:
+                self.groups.add(group)  # pylint: disable=no-member
+
+
+def create_user(**kwargs):
+    """This will create a user model instance, and save it. It returns the user object with
+    the raw password, while saving the hashed password"""
+    user = UserFactory.create(**kwargs)
+    password = user.password
+    user.set_password(password)
+    user.save()
+    user.password = password
+    return user
+
 
 # Create your tests here.
 class WalletTestCase(TestCase):
     def setUp(self):
         Wallet.objects.create(name="Wallet")
+
+
+class PubKeyTestCase(TestCase):
+    def test_logging_in(self):
+        PubKey.validate_unique
 
 
 class SimpleTest(TestCase):
@@ -14,3 +86,16 @@ class SimpleTest(TestCase):
         Tests that 1 + 1 always equals 2.
         """
         self.assertEqual(1 + 1, 2)
+
+    def test_details(self):
+        response = self.client.get("/wallet/details/")
+        self.assertEqual(response.status_code, 404)
+
+    def test_index(self):
+        response = self.client.get("/transaction/index/")
+        self.assertEqual(response.status_code, 404)
+
+
+class TransactionTestCase(TestCase):
+    def test_transaction(self):
+        self.failIfEqual(0, 1)
