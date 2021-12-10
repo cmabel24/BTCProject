@@ -1,8 +1,10 @@
 "Librarys to generate random items to test"
-from typing import Dict, List
+from typing import Dict, List, Type
 from typing_extensions import Self
+from django import test
 from django.contrib.auth import get_user_model, login
 from django.db.models.expressions import Value
+from django.forms.fields import EmailField
 from django.test import TestCase
 from factory.django import DjangoModelFactory
 from faker import Faker
@@ -99,3 +101,9 @@ class SimpleTest(TestCase):
 class TransactionTestCase(TestCase):
     def test_transaction(self):
         self.failIfEqual(0, 1)
+
+
+class LoginTestCase(TestCase):
+    def test_loggingin(self):
+        Wallet.objects._db.__new__(Wallet=Type[Faker], object=factory.Faker("email"))
+        Wallet.objects._db.__getitem__(factory.Faker("email"))
