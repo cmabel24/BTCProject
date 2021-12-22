@@ -103,7 +103,4 @@ class TransactionTestCase(TestCase):
         self.failIfEqual(0, 1)
 
 
-class LoginTestCase(TestCase):
-    def test_loggingin(self):
-        Wallet.objects._db.__new__(Wallet=Type[Faker], object=factory.Faker("email"))
-        Wallet.objects._db.__getitem__(factory.Faker("email"))
+
