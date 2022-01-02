@@ -3,11 +3,36 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 
-from .models import Key, Wallet
+from .models import Key, Wallet, Transaction
 
 
 class IndexView(generic.ListView):
     template_name = "transaction/index.html"
+    context_object_name = "latest_transaction_list"
+
+    def get_queryset(self):
+        """Return the last five transactions."""
+        return Wallet.objects.order_by("-pub_date")[:5]
+
+
+class DepositView(generic.CreateView):
+    template_name = "Deposit/deposit.html"
+    context_object_name = "Deposit"
+
+    def get_queryset(self):
+        return Transaction.objects.values("Deposit")
+
+
+class WithdrawView(generic.CreateView):
+    template_name = "Withdraw/withdraw.html"
+    context_object_name = "Withdraw"
+
+    def get_queryset(self):
+        return Transaction.objects.values("Withdraw")
+
+
+class TransactionView(generic.ListView):
+    template_name = "Transaction/transaction.html"
     context_object_name = "latest_transaction_list"
 
     def get_queryset(self):
