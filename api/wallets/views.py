@@ -6,6 +6,11 @@ from django.views import generic
 from .models import Key, Wallet, Transaction
 
 
+class LoginView(generic.FormView):
+    template_name = "login.html"
+    context_object_name = "Login form"
+
+
 class IndexView(generic.ListView):
     template_name = "transaction/index.html"
     context_object_name = "latest_transaction_list"
@@ -37,7 +42,7 @@ class TransactionView(generic.ListView):
 
     def get_queryset(self):
         """Return the last five transactions."""
-        return Wallet.objects.order_by("-pub_date")[:5]
+        return Transaction.objects.order_by("-pub_date")[:10]
 
 
 class DetailView(generic.DetailView):
