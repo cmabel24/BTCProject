@@ -118,7 +118,6 @@ class Transaction(models.Model):
 
 
 class OutgoingTransaction(models.Model):
-
     created_at = models.DateTimeField(default=datetime.datetime.now)
     expires_at = models.DateTimeField(default=datetime.datetime.now)
     executed_at = models.DateTimeField(null=True, default=None)

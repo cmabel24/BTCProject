@@ -11,9 +11,19 @@ class LoginView(generic.FormView):
     context_object_name = "Login form"
 
 
-class CreateUserView(generic.FormView):
-    template_name = "CreateUser.html"
-    context_object_name = "CreateUser form"
+class AccessAccounts(generic.ListView):
+    template_name = "AccessAccounts.html"
+    context_object_name = "AccessAccounts list"
+
+
+class UserHomepage(generic.DetailView):
+    template_name = "UserHomepage.html"
+    context_object_name = "Userhomepage"
+
+
+# class CreateUserView(generic.FormView):
+#     template_name = "CreateUser.html"
+#     context_object_name = "CreateUser form"
 
 
 class IndexView(generic.ListView):
