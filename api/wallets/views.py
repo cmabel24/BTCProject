@@ -2,8 +2,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
-
+from django.shortcuts import get_object_or_404
+from django.template.response import TemplateResponse
 from .models import Key, Wallet, Transaction
+import datetime
 
 
 class LoginView(generic.FormView):
@@ -32,7 +34,7 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """Return the last five transactions."""
-        return Wallet.objects.order_by("-pub_date")[:5]
+        return Wallet.objects.order_by("updated_at")[:5]
 
 
 class DepositView(generic.CreateView):
@@ -93,3 +95,12 @@ def transaction(request, key_id):
         return HttpResponseRedirect(
             reverse("transaction:results", args=(transaction.id,))
         )
+
+
+def page_details(request, slug):
+    page = get_object_or_404(user=request.user).filter(slug=slug)
+    today = datetime.date.today()
+    is_visible = page.available_on is None or page.available_on <= today
+    return TemplateResponse(
+        request, "page/details.html", {"page": page, "is_visible": is_visible}
+    )
