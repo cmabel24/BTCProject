@@ -1,10 +1,12 @@
+from importlib.resources import contents
+from urllib.request import Request
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
-from .models import Key, Wallet, Transaction
+from .models import Key, User, Wallet, Transaction, Page
 import datetime
 
 
@@ -98,7 +100,7 @@ def transaction(request, key_id):
 
 
 def page_details(request, slug):
-    page = get_object_or_404(user=request.user).filter(slug=slug)
+    page = get_object_or_404(Wallet, username=request.user).filter(slug=slug)
     today = datetime.date.today()
     is_visible = page.available_on is None or page.available_on <= today
     return TemplateResponse(
