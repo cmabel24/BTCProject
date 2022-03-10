@@ -1,6 +1,7 @@
 "Librarys to generate random items to test"
 from typing import Dict, List, Type
 from typing_extensions import Self
+from unittest import TestProgram
 from django import test
 from django.contrib.auth import get_user_model, login
 from django.db.models.expressions import Value
@@ -41,6 +42,8 @@ class UserFactory(DjangoModelFactory):
     password = factory.Faker("password")
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
+    wallet = factory.Faker("wallet")
+    transaction = factory.Faker("transaction")
 
     class Meta:
         """Meta Data"""
@@ -57,7 +60,7 @@ class UserFactory(DjangoModelFactory):
         if extracted:
             # A list of groups were passed in, use them
             for group in extracted:
-                self.groups.add(group)  # pylint: disable=no-member
+                self.groups.add(group)  # pylint: disable=no-
 
 
 def create_user(**kwargs):
@@ -103,4 +106,7 @@ class TransactionTestCase(TestCase):
         self.failIfEqual(0, 1)
 
 
-
+class WalletRPCTestCase(TestProgram):
+    def test_walletrpc(self):
+        factory.Faker("wallet")
+        factory.generate(Wallet, strategy=Faker)
