@@ -103,8 +103,8 @@ class SimpleTest(TestCase):
 
 
 class TransactionTestCase(TestCase):
-    def test_ransaction(self):
-        self.failIfEqual(0, 1)
+    def test_transaction(self):
+        self.assertNotEqual(0, 1)
 
 
 class WalletRPCTestCase(TestProgram):
