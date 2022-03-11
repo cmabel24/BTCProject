@@ -10,7 +10,6 @@ class IndexTests(TestCase):
     def test_transaction_view(self):
         self.assertListEqual(
             transaction=list,
-            transaction=list,
             msg="Transaction not displayed correctly",
         )
 

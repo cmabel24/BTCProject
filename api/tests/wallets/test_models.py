@@ -44,6 +44,7 @@ class UserFactory(DjangoModelFactory):
     last_name = factory.Faker("last_name")
     wallet = factory.Faker("wallet")
     transaction = factory.Faker("transaction")
+    wallets_page = factory.Faker("wallets_page")
 
     class Meta:
         """Meta Data"""
@@ -102,7 +103,7 @@ class SimpleTest(TestCase):
 
 
 class TransactionTestCase(TestCase):
-    def test_transaction(self):
+    def test_ransaction(self):
         self.failIfEqual(0, 1)
 
 
