@@ -19,12 +19,13 @@ from django.urls import include, path
 from wallets import urls as page_urls
 from django.conf.urls import include, url
 from wallets import urls as create_urls
+from wallets import urls as access_urls
 
 urlpatterns = [
     path("wallets/", include("wallets.urls")),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
-    # path("accounts/create/", include("createuser.urls")),
     url(r"^page/", include((page_urls, "page"), namespace="page")),
     url(r"^create/", include((create_urls, "create"), namespace="createuser")),
+    url(r"^access/", include((access_urls, "access"), namespace="accessuser")),
 ]
