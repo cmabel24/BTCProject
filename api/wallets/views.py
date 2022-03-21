@@ -25,8 +25,8 @@ class UserHomepage(generic.DetailView):
     context_object_name = "Userhomepage"
 
 
-class CreateUserView(generic.FormView):
-    template_name = "CreateUser.html"
+class CreateUser(generic.FormView):
+    template_name = "CreateAccount.html"
     context_object_name = "CreateUser form"
 
 

@@ -16,16 +16,16 @@ Including another URLconf
 from django import urls
 from django.contrib import admin
 from django.urls import include, path
-from wallets import urls as page_urls
+from wallets.views import UserHomepage as page_urls
 from django.conf.urls import include, url
-from wallets import urls as create_urls
-from wallets import urls as access_urls
+from wallets.views import CreateUser as create_urls
+from wallets.views import AccessAccounts as access_urls
 
 urlpatterns = [
     path("wallets/", include("wallets.urls")),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
-    url(r"^page/", include((page_urls, "page"), namespace="page")),
-    url(r"^create/", include((create_urls, "create"), namespace="createuser")),
-    url(r"^access/", include((access_urls, "access"), namespace="accessuser")),
+    url("^page/", include((page_urls, "page"), namespace="page")),
+    url("^create/", include((create_urls, "create"), namespace="createuser")),
+    url("^access/", include((access_urls, "access"), namespace="accessuser")),
 ]
