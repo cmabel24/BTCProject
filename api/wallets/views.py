@@ -22,7 +22,7 @@ class AccessAccounts(generic.ListView):
 
 class UserHomepage(generic.DetailView):
     template_name = "UserHomepage.html"
-    context_object_name = "Userhomepage"
+    context_object_name = "UserHomepage"
 
 
 class CreateUser(generic.FormView):
