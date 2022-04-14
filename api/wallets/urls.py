@@ -1,3 +1,4 @@
+from re import template
 from django.urls import path
 from django.conf.urls import url
 from . import views
@@ -11,4 +12,5 @@ urlpatterns = [
     path("<int:question_id>/balance/", views.ResultsView.as_view(), name="Balance"),
     path("<int:uuid>/UserHomepage", views.UserHomepage.as_view(), name="UserHomepage"),
     url(r"^(?P<slug>[a-z0-9-_]+?)/$", views.page_details, name="details"),
+    path("<int:pk>/simple/", views.Simple.as_view(), name="simple"),
 ]

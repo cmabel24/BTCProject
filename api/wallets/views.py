@@ -10,6 +10,11 @@ from .models import Key, User, Wallet, Transaction, Page
 import datetime
 
 
+class Simple(generic.CreateView):
+    template_name = "Simple.html"
+    context_object_name = "Simple Create"
+
+
 class LoginView(generic.FormView):
     template_name = "login.html"
     context_object_name = "Login form"
