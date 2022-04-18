@@ -40,6 +40,8 @@ pyscss = "*"
 sentry-sdk = "*"
 trio = "*"
 uvicorn = "*"
+bip32 = "*"
+mnemonic = "*"
 
 [dev-packages]
 black = "*"

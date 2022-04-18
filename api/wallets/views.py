@@ -9,8 +9,12 @@ from django.template.response import TemplateResponse
 from .models import Key, User, Wallet, Transaction, Page
 import datetime
 from django.http import HttpResponse, Http404
-
-
+from mnemonic import Mnemonic
+import secrets
+def RandInts(Size,nBits):
+    VectorSize = Size
+    RandomVector = [secrets.randbelow(nBits) for i in range(VectorSize)]
+    return RandomVector
 def index(request):
     return render(request, "wallets/simple.html")
 
@@ -27,6 +31,21 @@ def section(request, num):
         return HttpResponse(texts[num - 1])
     else:
         raise Http404("No such section")
+def page_details(request, slug):
+    page = get_object_or_404(Wallet, username=request.user).filter(slug=slug)
+    today = datetime.date.today()
+    is_visible = page.available_on is None or page.available_on <= today
+    return TemplateResponse(
+        request, "wallets/details.html", {"page": page, "is_visible": is_visible}
+    )
+
+class CreateSeedPhrase(generic.ListView):
+    """Creates the Seed Phrase"""
+    vect = RandInts(12, 2048)
+    mnemo = Mnemonic("english")
+    words = mnemo.generate(strength=128)
+    seed = mnemo.to_seed(words, passphrase="")
+
 
 
 class LoginView(generic.FormView):
@@ -90,7 +109,7 @@ class DetailView(generic.DetailView):
 
 class ResultsView(generic.DetailView):
     model = Wallet
-    template_name = "wallet/results.html"
+    template_name = "wallets/results.html"
 
 
 def transaction(request, key_id):
@@ -118,10 +137,3 @@ def transaction(request, key_id):
         )
 
 
-def page_details(request, slug):
-    page = get_object_or_404(Wallet, username=request.user).filter(slug=slug)
-    today = datetime.date.today()
-    is_visible = page.available_on is None or page.available_on <= today
-    return TemplateResponse(
-        request, "page/details.html", {"page": page, "is_visible": is_visible}
-    )
