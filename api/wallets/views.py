@@ -20,7 +20,7 @@ from django.shortcuts import render
 
 
 def index(request):
-    return render(request, "wallets/simple.html")
+    return render(request, "wallets/index.html")
 
 
 texts = [
@@ -43,7 +43,7 @@ def page_details(request, slug):
         request, "wallets/details.html", {"page": page, "is_visible": is_visible}
     )
 
-def CreateSeedPhrase(request):
+class CreateSeedPhrase(generic.FormView):
     """Creates the Seed Phrase"""
     # mnemo = Mnemonic("english")
     # words = mnemo.generate(strength=128)
@@ -72,7 +72,11 @@ def CreateSeedPhrase(request):
     hdwallet.from_index(0)
     hdwallet.from_index(0)
     mnemonic_phrase = hdwallet.dumps()["mnemonic"]
-    return render(request, "wallets/create.html", {"mnemonic_phrase":mnemonic_phrase})
+
+    def get(self,request):
+        return render(request, "wallets/create.html", {"mnemonic_phrase":self.mnemonic_phrase})
+    def post(self):
+        pass
     # Print all Bitcoin HDWallet information's
     #print(json.dumps(hdwallet.dumps(), indent=4, ensure_ascii=False))
 

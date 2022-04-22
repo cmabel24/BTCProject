@@ -1,5 +1,33 @@
 <html>
+    <head>
+        <title>Create a Bitcoin Wallet</title>
+        <script>
+
+            //  This function communicates with django (backend)
+            
+            function showSection(section) {   
+                fetch(`/sections/${section}`)
+                .then(response => response.text())
+                .then(text => {
+                    console.log(text);
+                    document.querySelector('#content').innerHTML = text;
+                });
+
+            document.addEventListener("DOMContentLoaded", function() {
+                document.querySelectorAll('button').forEach(button => {
+                    button.onclick = function() {
+                        showSection(this.dataset.section)
+                    }
+                })
+            });
+
+        </script>
+    </head>
+    
     <body>
         <span> {{mnemonic_phrase}} </span>
+        <button data-section="1" onclick = "location.href = 'index.html'" name = 'Exit'>Exit</button>
+        <button data-section="2">Save</button>
     <body>
+    
 <html>

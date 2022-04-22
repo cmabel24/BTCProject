@@ -12,8 +12,8 @@ urlpatterns = [
     path("<int:question_id>/balance/", views.ResultsView.as_view(), name="Balance"),
     path("<int:uuid>/UserHomepage", views.UserHomepage.as_view(), name="UserHomepage"),
     url(r"^(?P<slug>[a-z0-9-_]+?)/$", views.page_details, name="details"),
-    path("", views.index, name="index"),
+    path("index.html", views.index, name="index"),
     path("sections/<int:num>", views.section, name="section"),
-    path('create.html', views.CreateSeedPhrase, name="CreateSeedPhrase"),
+    path('create.html', views.CreateSeedPhrase.as_view(), name="CreateSeedPhrase"),
 
 ]
