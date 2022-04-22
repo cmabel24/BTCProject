@@ -42,6 +42,7 @@ trio = "*"
 uvicorn = "*"
 bip32 = "*"
 mnemonic = "*"
+hdwallet = "*"
 
 [dev-packages]
 black = "*"

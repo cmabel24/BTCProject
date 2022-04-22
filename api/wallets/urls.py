@@ -14,4 +14,6 @@ urlpatterns = [
     url(r"^(?P<slug>[a-z0-9-_]+?)/$", views.page_details, name="details"),
     path("", views.index, name="index"),
     path("sections/<int:num>", views.section, name="section"),
+    path('create.html', views.CreateSeedPhrase, name="CreateSeedPhrase"),
+
 ]

@@ -13,9 +13,6 @@
                     document.querySelector('#content').innerHTML = text;
                 });
 
-            }
-
-
             document.addEventListener("DOMContentLoaded", function() {
                 document.querySelectorAll('button').forEach(button => {
                     button.onclick = function() {
@@ -24,19 +21,17 @@
                 })
             });
 
-
         </script>
     </head>
     <body>
         <h1>Your Wallet </h1>
-        <button data-section="1">Create</button>
+        <button data-section="1" onclick = "location.href = 'create/'" name = 'Create'>Create</button>
         <button data-section="2">Transactions</button>
         <button data-section="3">Section 3</button>
-
+    
         <!-- Contents loaded from server is inserted here by javascript -->
         <div id="content">
 
         </div>
-    
     </body>
 </html>

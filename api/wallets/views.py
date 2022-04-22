@@ -1,25 +1,24 @@
 from importlib.resources import contents
 from urllib.request import Request
-from django.http import HttpResponseRedirect
+from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
+import mnemonic
 from .models import Key, User, Wallet, Transaction, Page
 import datetime
 from django.http import HttpResponse, Http404
 from mnemonic import Mnemonic
-import secrets
 from hdwallet import HDWallet
 from hdwallet.utils import generate_entropy
 from hdwallet.symbols import BTC as SYMBOL
 from typing import Optional
 import json
-def RandInts(Size,nBits):
-    VectorSize = Size
-    RandomVector = [secrets.randbelow(nBits) for i in range(VectorSize)]
-    return RandomVector
+from django.shortcuts import render
+
+
 def index(request):
     return render(request, "wallets/simple.html")
 
@@ -44,12 +43,11 @@ def page_details(request, slug):
         request, "wallets/details.html", {"page": page, "is_visible": is_visible}
     )
 
-class CreateSeedPhrase(generic.ListView):
+def CreateSeedPhrase(request):
     """Creates the Seed Phrase"""
-    vect = RandInts(12, 2048)
-    mnemo = Mnemonic("english")
-    words = mnemo.generate(strength=128)
-    seed = mnemo.to_seed(words, passphrase="")
+    # mnemo = Mnemonic("english")
+    # words = mnemo.generate(strength=128)
+    # seed = mnemo.to_seed(words, passphrase="")
     # Choose strength 128, 160, 192, 224 or 256
     STRENGTH: int = 160  # Default is 128
     # Choose language english, french, italian, spanish, chinese_simplified, chinese_traditional, japanese or korean
@@ -73,9 +71,11 @@ class CreateSeedPhrase(generic.ListView):
     hdwallet.from_index(0, hardened=True)
     hdwallet.from_index(0)
     hdwallet.from_index(0)
-
+    mnemonic_phrase = hdwallet.dumps()["mnemonic"]
+    return render(request, "wallets/create.html", {"mnemonic_phrase":mnemonic_phrase})
     # Print all Bitcoin HDWallet information's
-    print(json.dumps(hdwallet.dumps(), indent=4, ensure_ascii=False))
+    #print(json.dumps(hdwallet.dumps(), indent=4, ensure_ascii=False))
+
 
 class LoginView(generic.FormView):
     template_name = "login.html"
