@@ -7,6 +7,11 @@ from base58 import b58encode, b58decode
 from django import forms
 from django.core.exceptions import ValidationError
 
+class WalletDataField(forms.Form):
+    """This is just a descriptor for what this class does."""
+    name = forms.CharField(max_length = 64)
+    xprivate_key = forms.CharField(max_length=111)
+
 
 class BCAddressField(forms.CharField):
     default_error_messages = {

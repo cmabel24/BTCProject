@@ -64,13 +64,13 @@ class CreateSeedPhrase(generic.FormView):
     )
 
     # Derivation from path
-    # hdwallet.from_path("m/44'/0'/0'/0/0")
+    hdwallet.from_path("m/44'/0'/0'/0/0")
     # Or derivation from index
-    hdwallet.from_index(44, hardened=True)
-    hdwallet.from_index(0, hardened=True)
-    hdwallet.from_index(0, hardened=True)
-    hdwallet.from_index(0)
-    hdwallet.from_index(0)
+    # hdwallet.from_index(44, hardened=True)
+    # hdwallet.from_index(0, hardened=True)
+    # hdwallet.from_index(0, hardened=True)
+    # hdwallet.from_index(0)
+    # hdwallet.from_index(0)
     mnemonic_phrase = hdwallet.dumps()["mnemonic"]
 
     def get(self,request):

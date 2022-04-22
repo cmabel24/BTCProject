@@ -115,6 +115,7 @@ class Key(models.Model):
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="keys")
     name = models.CharField(max_length=64)
+    xprivate_key = models.CharField(max_length=111)
 
 
 class PubKey(models.Model):
@@ -126,7 +127,7 @@ class PubKey(models.Model):
         verbose_name="ID",
     )
     key = models.ForeignKey(Key, on_delete=models.CASCADE, related_name="pub_keys")
-    xpub1 = models.CharField(max_length=130, unique=True)
+    xpublic_key = models.CharField(max_length=130, unique=True)
 
 
 class Wallet(models.Model):
