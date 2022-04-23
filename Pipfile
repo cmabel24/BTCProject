@@ -58,6 +58,7 @@ pytest-django = "*"
 pytest-socket = "*"
 pytest-trio = "*"
 trio-typing = "*"
+django-extensions = "*"
 
 [requires]
 python_version = "3.9"

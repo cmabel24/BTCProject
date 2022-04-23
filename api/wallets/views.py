@@ -18,9 +18,15 @@ import json
 from wallets.forms import CreateWalletForm
 
 
-def index(request):
-    return render(request, "wallets/index.html")
+# def index(request):
+#     return render(request, "wallets/index.html")
 
+class IndexView(generic.ListView):
+    model = Key
+    template_name = "wallets/index.html"
+
+    def get_queryset(self):
+        return Key.objects.all()
 
 texts = [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tortor mauris, maximus semper volutpat vitae, varius placerat dui. Nunc consequat dictum est, at vestibulum est hendrerit at. Mauris suscipit neque ultrices nisl interdum accumsan. Sed euismod, ligula eget tristique semper, lecleo mi nec orci. Curabitur hendrerit, est in ",
@@ -41,6 +47,18 @@ def page_details(request, slug):
     return TemplateResponse(
         request, "wallets/details.html", {"page": page, "is_visible": is_visible}
     )
+
+class IndexView(generic.ListView):
+    template_name = "wallets/index.html"
+    context_object_name = "wallet_list"
+    model = Key
+
+    def get_queryset(self):
+        """Return the last five transactions."""
+        return Key.objects.filter()[:5]
+
+class DetailView(generic.DetailView):
+    """"""
 
 class CreateSeedPhrase(generic.FormView):
     """Creates the Seed Phrase"""
@@ -83,97 +101,102 @@ class CreateSeedPhrase(generic.FormView):
             data = form.save(commit=False)
             data.xpublic_key = self.hdwallet.dumps()["xpublic_key"]
             data.save()
-            return redirect("index.html")
+            redirect_url = reverse("Django Bitcoin:wallet_list")
+            print(redirect_url)
+            return redirect(redirect_url)
     # Print all Bitcoin HDWallet information's
     #print(json.dumps(hdwallet.dumps(), indent=4, ensure_ascii=False))
 
 
-class LoginView(generic.FormView):
-    template_name = "login.html"
-    context_object_name = "Login form"
+
+# class LoginView(generic.FormView):
+#     template_name = "login.html"
+#     context_object_name = "Login form"
 
 
-class AccessAccounts(generic.ListView):
-    template_name = "AccessAccounts.html"
-    context_object_name = "AccessAccounts list"
+# class AccessAccounts(generic.ListView):
+#     template_name = "AccessAccounts.html"
+#     context_object_name = "AccessAccounts list"
 
 
-class UserHomepage(generic.DetailView):
-    template_name = "UserHomepage.html"
-    context_object_name = "UserHomepage"
+# class UserHomepage(generic.DetailView):
+#     template_name = "UserHomepage.html"
+#     context_object_name = "UserHomepage"
 
 
-class CreateUser(generic.FormView):
-    template_name = "CreateAccount.html"
-    context_object_name = "CreateUser form"
+# class CreateUser(generic.FormView):
+#     template_name = "CreateAccount.html"
+#     context_object_name = "CreateUser form"
 
 
-class IndexView(generic.ListView):
-    template_name = "transaction/index.html"
-    context_object_name = "latest_transaction_list"
-
-    def get_queryset(self):
-        """Return the last five transactions."""
-        return Wallet.objects.order_by("updated_at")[:5]
 
 
-class DepositView(generic.CreateView):
-    template_name = "Deposit/deposit.html"
-    context_object_name = "Deposit"
+# class IndexView(generic.ListView):
+#     template_name = "transaction/index.html"
+#     context_object_name = "latest_transaction_list"
 
-    def get_queryset(self):
-        return Transaction.objects.values("Deposit")
-
-
-class WithdrawView(generic.CreateView):
-    template_name = "Withdraw/withdraw.html"
-    context_object_name = "Withdraw"
-
-    def get_queryset(self):
-        return Transaction.objects.values("Withdraw")
+#     def get_queryset(self):
+#         """Return the last five transactions."""
+#         return Wallet.objects.order_by("updated_at")[:5]
 
 
-class TransactionView(generic.ListView):
-    template_name = "Transaction/transaction.html"
-    context_object_name = "latest_transaction_list"
+# class DepositView(generic.CreateView):
+#     template_name = "Deposit/deposit.html"
+#     context_object_name = "Deposit"
 
-    def get_queryset(self):
-        """Return the last five transactions."""
-        return Transaction.objects.order_by("-pub_date")[:10]
-
-
-class DetailView(generic.DetailView):
-    model = Wallet
-    template_name = "wallets/detail.html"
+#     def get_queryset(self):
+#         return Transaction.objects.values("Deposit")
 
 
-class ResultsView(generic.DetailView):
-    model = Wallet
-    template_name = "wallets/results.html"
+# class WithdrawView(generic.CreateView):
+#     template_name = "Withdraw/withdraw.html"
+#     context_object_name = "Withdraw"
+
+#     def get_queryset(self):
+#         return Transaction.objects.values("Withdraw")
 
 
-def transaction(request, key_id):
-    wallet = get_object_or_404(Wallet, pk=key_id)
-    try:
-        selected_choice = Key.choice_set.get(pk=request.POST["key"])
-    except (Wallet.Error, Wallet.DoesNotExist):
-        # Redisplay the question voting form.
-        return render(
-            request,
-            "wallets/detail.html",
-            {
-                "Payment": Wallet,
-                "error_message": "You didn't select an amount.",
-            },
-        )
-    else:
-        selected_choice.vote += 1
-        selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(
-            reverse("transaction:results", args=(transaction.id,))
-        )
+# class TransactionView(generic.ListView):
+#     template_name = "Transaction/transaction.html"
+#     context_object_name = "latest_transaction_list"
+
+#     def get_queryset(self):
+#         """Return the last five transactions."""
+#         return Transaction.objects.order_by("-pub_date")[:10]
+
+
+# class DetailView(generic.DetailView):
+#     model = Wallet
+#     template_name = "wallets/detail.html"
+
+
+# class ResultsView(generic.DetailView):
+#     model = Wallet
+#     template_name = "wallets/results.html"
+
+
+# def transaction(request, key_id):
+#     wallet = get_object_or_404(Wallet, pk=key_id)
+#     try:
+#         selected_choice = Key.choice_set.get(pk=request.POST["key"])
+#     except (Wallet.Error, Wallet.DoesNotExist):
+#         # Redisplay the question voting form.
+#         return render(
+#             request,
+#             "wallets/detail.html",
+#             {
+#                 "Payment": Wallet,
+#                 "error_message": "You didn't select an amount.",
+#             },
+#         )
+#     else:
+#         selected_choice.vote += 1
+#         selected_choice.save()
+#         # Always return an HttpResponseRedirect after successfully dealing
+#         # with POST data. This prevents data from being posted twice if a
+#         # user hits the Back button.
+#         return HttpResponseRedirect(
+#             reverse("transaction:results", args=(transaction.id,))
+#         )
 
 

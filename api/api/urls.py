@@ -18,7 +18,7 @@ from django.urls import include, path
 from django.conf.urls import include
 
 urlpatterns = [
-    path("wallets/", include("wallets.urls")),
+    path("wallets/", include("wallets.urls"),name="wallets"),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
 ]
