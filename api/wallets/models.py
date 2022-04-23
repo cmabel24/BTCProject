@@ -113,7 +113,7 @@ class Key(models.Model):
         editable=False,
         verbose_name="ID",
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="keys")
+    # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="keys")
     name = models.CharField(max_length=64)
     xprivate_key = models.CharField(max_length=111)
 

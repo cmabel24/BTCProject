@@ -3,14 +3,19 @@
 #
 import re
 import hashlib
+from unicodedata import name
 from base58 import b58encode, b58decode
 from django import forms
 from django.core.exceptions import ValidationError
+from wallets.models import Key
 
-class WalletDataField(forms.Form):
+class CreateWalletForm(forms.ModelForm):
     """This is just a descriptor for what this class does."""
-    name = forms.CharField(max_length = 64)
-    xprivate_key = forms.CharField(max_length=111)
+    class Meta:
+        fields = ["name"]
+        model = Key
+
+    # xprivate_key = forms.CharField(max_length=111)
 
 
 class BCAddressField(forms.CharField):

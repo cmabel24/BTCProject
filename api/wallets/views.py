@@ -1,10 +1,9 @@
 from importlib.resources import contents
 from urllib.request import Request
 from django.http import HttpRequest, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
-from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 import mnemonic
 from .models import Key, User, Wallet, Transaction, Page
@@ -16,7 +15,7 @@ from hdwallet.utils import generate_entropy
 from hdwallet.symbols import BTC as SYMBOL
 from typing import Optional
 import json
-from django.shortcuts import render
+from wallets.forms import CreateWalletForm
 
 
 def index(request):
@@ -74,9 +73,17 @@ class CreateSeedPhrase(generic.FormView):
     mnemonic_phrase = hdwallet.dumps()["mnemonic"]
 
     def get(self,request):
-        return render(request, "wallets/create.html", {"mnemonic_phrase":self.mnemonic_phrase})
-    def post(self):
-        pass
+        context ={}
+        context['form']= CreateWalletForm()
+        context["mnemonic_phrase"] = self.mnemonic_phrase
+        return render(request, "wallets/create.html", context)
+    def post(self,request):
+        form = CreateWalletForm(request.POST)
+        if form.is_valid():
+            data = form.save(commit=False)
+            data.xpublic_key = self.hdwallet.dumps()["xpublic_key"]
+            data.save()
+            return redirect("index.html")
     # Print all Bitcoin HDWallet information's
     #print(json.dumps(hdwallet.dumps(), indent=4, ensure_ascii=False))
 

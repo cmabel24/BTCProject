@@ -26,8 +26,13 @@
     
     <body>
         <span> {{mnemonic_phrase}} </span>
+        
         <button data-section="1" onclick = "location.href = 'index.html'" name = 'Exit'>Exit</button>
-        <button data-section="2">Save</button>
     <body>
+    <form action = "" method = "post">
+        {% csrf_token %}
+        {{form }}
+        <input type="submit" value="Submit">
+    </form>
     
 <html>
