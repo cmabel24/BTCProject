@@ -10,7 +10,6 @@ import uuid
 from django.db import transaction as db_transaction
 from django.db.models import Avg, Max, Min, Sum
 from .seo.models import SeoModel, SeoModelTranslation
-
 User = get_user_model()
 
 
@@ -25,7 +24,6 @@ from django.db import models
 from django.db.models import Q
 from django.urls import reverse
 from django.utils.translation import pgettext_lazy
-
 
 class PageQuerySet(models.QuerySet):
     def public(self):
@@ -116,6 +114,8 @@ class Key(models.Model):
     # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="keys")
     name = models.CharField(max_length=64)
     xprivate_key = models.CharField(max_length=111)
+    date = models.DateTimeField(auto_now_add=True)
+
 
 
 class PubKey(models.Model):

@@ -34,7 +34,7 @@
         <ul>
           {% for Key in wallet_list %}
             <li>
-              <a href="{{ wallet.get_absolute_url }}">{{ Key}}</a>
+              <a href="{{ wallet.get_absolute_url }}">{{ Key.name}}</a>
             </li>
           {% endfor %}
         </ul>

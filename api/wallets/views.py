@@ -16,6 +16,7 @@ from hdwallet.symbols import BTC as SYMBOL
 from typing import Optional
 import json
 from wallets.forms import CreateWalletForm
+from django.utils.timezone import now
 
 
 # def index(request):
@@ -55,7 +56,7 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """Return the last five transactions."""
-        return Key.objects.filter()[:5]
+        return self.model.objects.all().order_by("-date")[:5]
 
 class DetailView(generic.DetailView):
     """"""
