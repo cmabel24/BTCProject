@@ -111,11 +111,8 @@ class Key(models.Model):
         editable=False,
         verbose_name="ID",
     )
-    # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="keys")
-    name = models.CharField(max_length=64)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="private_keys")
     xprivate_key = models.CharField(max_length=111)
-    date = models.DateTimeField(auto_now_add=True)
-
 
 
 class PubKey(models.Model):
@@ -126,8 +123,9 @@ class PubKey(models.Model):
         editable=False,
         verbose_name="ID",
     )
-    key = models.ForeignKey(Key, on_delete=models.CASCADE, related_name="pub_keys")
-    xpublic_key = models.CharField(max_length=130, unique=True)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_public_keys")
+    key = models.ForeignKey(Key, on_delete=models.CASCADE, related_name="wallet_public_keys")
+    xpublic_key = models.CharField(max_length=130)
 
 
 class Wallet(models.Model):
@@ -138,8 +136,8 @@ class Wallet(models.Model):
         editable=False,
         verbose_name="ID",
     )
-    created_at = models.DateTimeField(default=datetime.datetime.now)
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def update_last_balance(self, amount):
         if (
@@ -150,27 +148,27 @@ class Wallet(models.Model):
         ):
             update_wallet_balance.apply_async((self.id,), countdown=1)
 
-    def save(self, *args, **kwargs):
-        """No need for labels."""
-        self.updated_at = datetime.datetime.now()
-        super(Wallet, self).save(*args, **kwargs)
-        # super(Wallet, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     """No need for labels."""
+    #     self.updated_at = datetime.datetime.now()
+    #     super(Wallet, self).save(*args, **kwargs)
+    #     # super(Wallet, self).save(*args, **kwargs)
 
-    keys = models.ManyToManyField(PubKey, related_name="pub_keys")
+    keys = models.ManyToManyField(PubKey, related_name="public_keys")
     name = models.TextField(unique=True)
     addressType = models.TextField(max_length=9)
-    network = models.TextField(max_length=7, unique=True)
+    # network = models.TextField(max_length=7, unique=True)
     # "Client"
-    type = models.Choices("private", "public")
-    url = models.URLField("http://bitcoind.localhost:8080")
-    username = models.TextField(unique=True, max_length=20)
+    # type = models.Choices("private", "public")
+    # url = models.URLField("http://bitcoind.localhost:8080")
+    # username = models.TextField(unique=True, max_length=20)
     # "qourum"
     requiredSigners = models.TextField(1)
     totalSigners = models.TextField(1)
 
 
 class Transaction(models.Model):
-    created_at = models.DateTimeField(default=datetime.datetime.now)
+    created_at = models.DateTimeField(auto_now_add=True)
     amount = models.DecimalField(
         max_digits=16, decimal_places=8, default=Decimal("0.0")
     )

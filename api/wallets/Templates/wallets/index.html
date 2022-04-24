@@ -32,9 +32,9 @@
         <h1>Wallet List</h1>
         {% if wallet_list %}
         <ul>
-          {% for Key in wallet_list %}
+          {% for Wallet in wallet_list %}
             <li>
-              <a href="{{ wallet.get_absolute_url }}">{{ Key.name}}</a>
+              <a href="{{ wallet.get_absolute_url }}">{{ Wallet.name}}</a>
             </li>
           {% endfor %}
         </ul>

@@ -1,22 +1,17 @@
-from importlib.resources import contents
-from urllib.request import Request
-from django.http import HttpRequest, HttpResponseRedirect
+import datetime
+# import json
+from typing import Optional
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
 from django.template.response import TemplateResponse
-import mnemonic
-from .models import Key, User, Wallet, Transaction, Page
-import datetime
 from django.http import HttpResponse, Http404
-from mnemonic import Mnemonic
 from hdwallet import HDWallet
 from hdwallet.utils import generate_entropy
 from hdwallet.symbols import BTC as SYMBOL
-from typing import Optional
-import json
+
 from wallets.forms import CreateWalletForm
-from django.utils.timezone import now
+from wallets.models import Key, Transaction, Wallet, PubKey
 
 
 # def index(request):
@@ -52,14 +47,16 @@ def page_details(request, slug):
 class IndexView(generic.ListView):
     template_name = "wallets/index.html"
     context_object_name = "wallet_list"
-    model = Key
+    model = Wallet
 
     def get_queryset(self):
         """Return the last five transactions."""
-        return self.model.objects.all().order_by("-date")[:5]
+        return self.model.objects.all().order_by("-created_at")[:5]
 
 class DetailView(generic.DetailView):
     """"""
+    model = Transaction
+    template_name = "wallets/detail.html"
 
 class CreateSeedPhrase(generic.FormView):
     """Creates the Seed Phrase"""
@@ -99,9 +96,20 @@ class CreateSeedPhrase(generic.FormView):
     def post(self,request):
         form = CreateWalletForm(request.POST)
         if form.is_valid():
-            data = form.save(commit=False)
-            data.xpublic_key = self.hdwallet.dumps()["xpublic_key"]
+            # Write xPriv to Key model
+            priv_key = Key(xprivate_key=self.hdwallet.dumps()["xprivate_key"])
+            priv_key.save()
+
+            #Write xPub and key_id to PubKey model
+            pub_key = PubKey(xpublic_key=self.hdwallet.dumps()["xpublic_key"], key=priv_key)
+            pub_key.save()
+
+            #Write name, requiredSigners, totalSigners, keys to Wallet model
+            data: Wallet = form.save(commit=False)
+            data.requiredSigners = 1
+            data.totalSigners = 1
             data.save()
+            data.keys.set([pub_key])
             redirect_url = reverse("Django Bitcoin:wallet_list")
             print(redirect_url)
             return redirect(redirect_url)
