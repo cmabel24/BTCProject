@@ -43,6 +43,8 @@ uvicorn = "*"
 bip32 = "*"
 mnemonic = "*"
 hdwallet = "*"
+django-channels2-jsonrpc = "*"
+python-bitcoinrpc = "*"
 
 [dev-packages]
 black = "*"

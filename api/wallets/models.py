@@ -168,6 +168,7 @@ class Wallet(models.Model):
 
 
 class Transaction(models.Model):
+    wallet = models.ForeignKey(Wallet,on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     amount = models.DecimalField(
         max_digits=16, decimal_places=8, default=Decimal("0.0")

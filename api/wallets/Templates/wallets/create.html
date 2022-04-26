@@ -26,8 +26,9 @@
     
     <body>
         <span> {{mnemonic_phrase}} </span>
-        
-        <button data-section="1" onclick = "location.href = 'index.html'" name = 'Exit'>Exit</button>
+        <form action='/wallets/' method='GET'>
+            <button type='submit'>Exit</button>
+        </form>
     <body>
     <form action = "" method = "post">
         {% csrf_token %}
