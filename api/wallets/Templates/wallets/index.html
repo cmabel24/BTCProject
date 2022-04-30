@@ -27,14 +27,13 @@
         <h1>Your Wallet </h1>
         <button data-section="1" onclick = "location.href = 'create.html'" name = 'Create'>Create</button>
         <button data-section="2">Transactions</button>
-        <button data-section="3">Section 3</button>
         {% block content %}
         <h1>Wallet List</h1>
         {% if wallet_list %}
         <ul>
           {% for Wallet in wallet_list %}
             <li>
-              <a href="{{ wallet.get_absolute_url }}">{{ Wallet.name}}</a>
+              <a href="{{ Wallet.id }}">{{ Wallet.name}}</a>
             </li>
           {% endfor %}
         </ul>
