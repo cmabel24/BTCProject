@@ -1,57 +1,49 @@
-{% extends "base.html" %}
-{% load i18n %}
-{% load materializecss %}
-{% load build_absolute_uri from urls %}
+<html>
+    <head>
+        <title>{{page_title}}</title>
+        <script>
 
-{% block title %}
-  {% if page.seo_title %}
-    {{ page.translated.seo_title }}
-  {% else %}
-    {{ page.translated.title }} - {{ block.super }}
-  {% endif %}
-{% endblock %}
+            //  This function communicates with django (backend)
+            
+            function showSection(section) {   
+                fetch(`/sections/${section}`)
+                .then(response => response.text())
+                .then(text => {
+                    console.log(text);
+                    document.querySelector('#content').innerHTML = text;
+                });
 
-{% block meta_tags %}
-  <meta property="og:title" content="{{ page.translated.seo_title|default:page.translated.title }}">
-  <meta property="og:description" content="{{ page.translated.seo_description|default:"" }}">
-  <meta name="description" content="{{ page.translated.seo_description|default:"" }}">
+            document.addEventListener("DOMContentLoaded", function() {
+                document.querySelectorAll('button').forEach(button => {
+                    button.onclick = function() {
+                        showSection(this.dataset.section)
+                    }
+                })
+            });
 
-  {% build_absolute_uri request=request location=page.get_absolute_url as page_url %}
-  <meta property="og:url" content="{{ page_url }}">
-{% endblock meta_tags %}
+        </script>
+    </head>
+    <body>
+        <h1>Your Wallet </h1>
+        <form action='/wallets/' method='GET'>
+            <button type='submit'>Exit</button>
+        </form>
+        {% block content %}
+        <h1>Transcation List</h1>
+        {% if transactions %}
+        <ul>
+            {% for tx in transactions %}
+              <li>{{tx.amount}}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+          <p>There are no transactions in this wallet.</p>
+        {% endif %}
+      {% endblock %}
+        <!-- Contents loaded from server is inserted here by javascript -->
+        <div id="content">
 
-{% block breadcrumb %}
-  <ul class="breadcrumbs list-unstyled">
-    <li>
-      <a href="{% url 'home' %}">
-        {% trans "Home" context "Main navigation item" %}
-      </a>
-    </li>
-    {% if page %}
-      <li>
-        <a href="{{ page.get_absolute_url }}">{{ page.translated.title }}</a>
-      </li>
-    {% endif %}
-  </ul>
-{% endblock breadcrumb %}
+        </div>
+    </body>
 
-{% block content %}
-  {% if not page.is_visible %}
-    <div class="alert alert-warning" role="alert">
-      {% blocktrans context "Unavailable page detail text" %}
-        <strong>Warning!</strong>
-        You are previewing a page that is not visible.
-      {% endblocktrans %}
-    </div>
-  {% elif not is_visible %}
-    <div class="alert alert-warning" role="alert">
-      {% blocktrans trimmed with date=page.available_on|date context "Unpublished page details text" %}
-        <strong>Warning!</strong>
-        You are previewing a page that will become visible on <strong>{{ date }}</strong>.
-      {% endblocktrans %}
-    </div>
-  {% endif %}
-  <div class="">
-    {{ page.translated.content|safe }}
-  </div>
-{% endblock %}
+</html>

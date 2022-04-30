@@ -1,23 +1,22 @@
 import datetime
+from multiprocessing import context
 # import json
 from typing import Optional
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
-from django.views import generic
+from django.views.generic import ListView, FormView, DetailView, CreateView
 from django.template.response import TemplateResponse
 from django.http import HttpResponse, Http404
 from hdwallet import HDWallet
 from hdwallet.utils import generate_entropy
 from hdwallet.symbols import BTC as SYMBOL
+from django.utils import timezone
 
 from wallets.forms import CreateWalletForm
 from wallets.models import Key, Transaction, Wallet, PubKey
 
 
-# def index(request):
-#     return render(request, "wallets/index.html")
-
-class IndexView(generic.ListView):
+class IndexView(ListView):
     model = Key
     template_name = "wallets/index.html"
 
@@ -44,21 +43,30 @@ def page_details(request, slug):
         request, "wallets/details.html", {"page": page, "is_visible": is_visible}
     )
 
-class IndexView(generic.ListView):
+class IndexView(ListView):
     template_name = "wallets/index.html"
     context_object_name = "wallet_list"
     model = Wallet
 
     def get_queryset(self):
-        """Return the last five transactions."""
+        """Return the last five wallets."""
         return self.model.objects.all().order_by("-created_at")[:5]
 
-class DetailView(generic.DetailView):
-    """"""
-    model = Transaction
-    template_name = "wallets/detail.html"
+class TransactionListView(ListView):
+    model =Transaction
+    template_name = 'wallets/details.html'
+    context_object_name = "transactions"
 
-class CreateSeedPhrase(generic.FormView):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(wallet__id=self.kwargs['pk'])
+    
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['page_title'] = 'Transactions'
+        return 
+
+class CreateSeedPhrase(FormView):
     """Creates the Seed Phrase"""
     # mnemo = Mnemonic("english")
     # words = mnemo.generate(strength=128)
@@ -87,6 +95,7 @@ class CreateSeedPhrase(generic.FormView):
     # hdwallet.from_index(0)
     # hdwallet.from_index(0)
     mnemonic_phrase = hdwallet.dumps()["mnemonic"]
+    
 
     def get(self,request):
         context ={}
@@ -111,36 +120,35 @@ class CreateSeedPhrase(generic.FormView):
             data.save()
             data.keys.set([pub_key])
             redirect_url = reverse("Django Bitcoin:wallet_list")
-            print(redirect_url)
             return redirect(redirect_url)
     # Print all Bitcoin HDWallet information's
     #print(json.dumps(hdwallet.dumps(), indent=4, ensure_ascii=False))
 
 
 
-# class LoginView(generic.FormView):
+# class LoginView(FormView):
 #     template_name = "login.html"
 #     context_object_name = "Login form"
 
 
-# class AccessAccounts(generic.ListView):
+# class AccessAccounts(ListView):
 #     template_name = "AccessAccounts.html"
 #     context_object_name = "AccessAccounts list"
 
 
-# class UserHomepage(generic.DetailView):
+# class UserHomepage(DetailView):
 #     template_name = "UserHomepage.html"
 #     context_object_name = "UserHomepage"
 
 
-# class CreateUser(generic.FormView):
+# class CreateUser(FormView):
 #     template_name = "CreateAccount.html"
 #     context_object_name = "CreateUser form"
 
 
 
 
-# class IndexView(generic.ListView):
+# class IndexView(ListView):
 #     template_name = "transaction/index.html"
 #     context_object_name = "latest_transaction_list"
 
@@ -149,7 +157,7 @@ class CreateSeedPhrase(generic.FormView):
 #         return Wallet.objects.order_by("updated_at")[:5]
 
 
-# class DepositView(generic.CreateView):
+# class DepositView(CreateView):
 #     template_name = "Deposit/deposit.html"
 #     context_object_name = "Deposit"
 
@@ -157,7 +165,7 @@ class CreateSeedPhrase(generic.FormView):
 #         return Transaction.objects.values("Deposit")
 
 
-# class WithdrawView(generic.CreateView):
+# class WithdrawView(CreateView):
 #     template_name = "Withdraw/withdraw.html"
 #     context_object_name = "Withdraw"
 
@@ -165,7 +173,7 @@ class CreateSeedPhrase(generic.FormView):
 #         return Transaction.objects.values("Withdraw")
 
 
-# class TransactionView(generic.ListView):
+# class TransactionView(ListView):
 #     template_name = "Transaction/transaction.html"
 #     context_object_name = "latest_transaction_list"
 
@@ -174,12 +182,12 @@ class CreateSeedPhrase(generic.FormView):
 #         return Transaction.objects.order_by("-pub_date")[:10]
 
 
-# class DetailView(generic.DetailView):
+# class DetailView(DetailView):
 #     model = Wallet
 #     template_name = "wallets/detail.html"
 
 
-# class ResultsView(generic.DetailView):
+# class ResultsView(DetailView):
 #     model = Wallet
 #     template_name = "wallets/results.html"
 

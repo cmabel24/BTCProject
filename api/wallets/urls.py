@@ -6,7 +6,7 @@ from . import views
 app_name = "Django Bitcoin"
 urlpatterns = [
     path("", views.IndexView.as_view(), name="wallet_list"),
-    path("<int:pk>/", views.DetailView.as_view(), name="wallet_detail"),
+    path("<uuid:pk>/", views.TransactionListView.as_view(), name="wallet_detail"),
     path('create.html', views.CreateSeedPhrase.as_view(), name="CreateSeedPhrase"),
     # path("<int:pk>/transaction/", views.ResultsView.as_view(), name="Transactions"),
     # path("<int:question_id>/balance/", views.ResultsView.as_view(), name="Balance"),
