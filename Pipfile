@@ -13,8 +13,10 @@ channels = "*"
 channels-redis = "*"
 django = "*"
 django-allow-cidr = "*"
+django-cc = {editable = true, path = "./../django-cc"}
 django-celery-beat = "*"
 django-celery-results = "*"
+django-channels2-jsonrpc = "*"
 django-cors-headers = "*"
 django-extensions = "*"
 django-filter = "*"
@@ -43,7 +45,6 @@ uvicorn = "*"
 bip32 = "*"
 mnemonic = "*"
 hdwallet = "*"
-django-channels2-jsonrpc = "*"
 python-bitcoinrpc = "*"
 
 [dev-packages]
