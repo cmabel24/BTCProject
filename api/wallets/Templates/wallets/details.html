@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>{{page_title}}</title>
+        <title>Wallet Detail</title>
         <script>
 
             //  This function communicates with django (backend)
@@ -29,17 +29,15 @@
             <button type='submit'>Exit</button>
         </form>
         {% block content %}
-        <h1>Transcation List</h1>
-        {% if transactions %}
+            <h1>Transaction List</h1>
         <ul>
-            {% for tx in transactions %}
-              <li>{{tx.amount}}</li>
+            {% for tx in object_list %}
+                <li>{{tx.created_at}} - {{tx.amount}}</li>
+            {% empty %}
+                <p>There are no transactions in this wallet.</p>
             {% endfor %}
-        </ul>
-        {% else %}
-          <p>There are no transactions in this wallet.</p>
-        {% endif %}
-      {% endblock %}
+        <ul/>
+        {% endblock %}
         <!-- Contents loaded from server is inserted here by javascript -->
         <div id="content">
 

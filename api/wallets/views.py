@@ -1,6 +1,7 @@
 import datetime
 from multiprocessing import context
 # import json
+from uuid import UUID
 from typing import Optional
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
@@ -55,16 +56,19 @@ class IndexView(ListView):
 class TransactionListView(ListView):
     model =Transaction
     template_name = 'wallets/details.html'
-    context_object_name = "transactions"
+    # context_object_name = "transaction_list"
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.filter(wallet__id=self.kwargs['pk'])
+        id = self.kwargs['pk']
+        qs = qs.filter(wallet__id=id).order_by("-created_at")[:5]
+        print(qs.values_list("amount",flat=True))
+        return qs
     
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data['page_title'] = 'Transactions'
-        return 
+    # def get_context_data(self, **kwargs):
+    #     data = super().get_context_data(**kwargs)
+    #     data['page_title'] = 'Transactions'
+    #     return 
 
 class CreateSeedPhrase(FormView):
     """Creates the Seed Phrase"""
