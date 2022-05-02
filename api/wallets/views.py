@@ -119,5 +119,3 @@ class CreateSeedPhrase(FormView):
             data.keys.set([pub_key])
             redirect_url = reverse("Django Bitcoin:wallet_list")
             return redirect(redirect_url)
-    # Print all Bitcoin HDWallet information's
-    #print(json.dumps(hdwallet.dumps(), indent=4, ensure_ascii=False))
