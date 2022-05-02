@@ -49,7 +49,6 @@ class Page(SeoModel):
     available_on = models.DateField(blank=True, null=True)
 
     objects = PageQuerySet.as_manager()
-    # translated = TranslationProxy()
 
     class Meta:
         ordering = ("slug",)
@@ -62,9 +61,6 @@ class Page(SeoModel):
 
     def get_absolute_url(self):
         return reverse("page:details", kwargs={"slug": self.slug})
-
-    # def get_full_url(self):
-    #     return build_absolute_uri(self.get_absolute_url())
 
     @property
     def is_published(self):
@@ -111,7 +107,6 @@ class Key(models.Model):
         editable=False,
         verbose_name="ID",
     )
-    # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="private_keys")
     xprivate_key = models.CharField(max_length=111)
 
 
@@ -123,7 +118,6 @@ class PubKey(models.Model):
         editable=False,
         verbose_name="ID",
     )
-    # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_public_keys")
     key = models.ForeignKey(Key, on_delete=models.CASCADE, related_name="wallet_public_keys")
     xpublic_key = models.CharField(max_length=130)
 
@@ -148,21 +142,9 @@ class Wallet(models.Model):
         ):
             update_wallet_balance.apply_async((self.id,), countdown=1)
 
-    # def save(self, *args, **kwargs):
-    #     """No need for labels."""
-    #     self.updated_at = datetime.datetime.now()
-    #     super(Wallet, self).save(*args, **kwargs)
-    #     # super(Wallet, self).save(*args, **kwargs)
-
     keys = models.ManyToManyField(PubKey, related_name="public_keys")
     name = models.TextField(unique=True)
     addressType = models.TextField(max_length=9)
-    # network = models.TextField(max_length=7, unique=True)
-    # "Client"
-    # type = models.Choices("private", "public")
-    # url = models.URLField("http://bitcoind.localhost:8080")
-    # username = models.TextField(unique=True, max_length=20)
-    # "qourum"
     requiredSigners = models.TextField(1)
     totalSigners = models.TextField(1)
 
@@ -176,26 +158,6 @@ class Transaction(models.Model):
     address = models.CharField(max_length=50)
 
 
-# class DepositTransaction(models.Model):
-
-#     created_at = models.DateTimeField(default=datetime.datetime.now)
-#     # address = models.ForeignKey("BitcoinAddress")
-
-#     amount = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal(0))
-#     description = models.CharField(max_length=100, blank=True, null=True, default=None)
-
-#     wallet = models.ForeignKey("Wallet")
-
-#     under_execution = models.BooleanField(default=False)  # execution fail
-#     transaction = models.ForeignKey("WalletTransaction", null=True, default=None)
-
-#     confirmations = models.IntegerField(default=0)
-#     txid = models.CharField(max_length=100, blank=True, null=True)
-
-#     def __unicode__(self):
-#         return self.address.address + u", " + unicode(self.amount)
-
-
 class OutgoingTransaction(models.Model):
     created_at = models.DateTimeField(default=datetime.datetime.now)
     expires_at = models.DateTimeField(default=datetime.datetime.now)
@@ -205,7 +167,6 @@ class OutgoingTransaction(models.Model):
     amount = models.DecimalField(
         max_digits=16, decimal_places=8, default=Decimal("0.0")
     )
-    # description = models.CharField(max_length=100, blank=True)
 
     txid = models.CharField(max_length=100, blank=True, null=True, default=None)
 
@@ -230,7 +191,5 @@ class BitcoinAddress(models.Model):
         max_digits=16, decimal_places=8, default=Decimal(0)
     )
     label = models.CharField(max_length=50, blank=True, null=True, default=None)
-
-    # wallet = models.ForeignKey("Wallet", null=True, related_name="addresses")
 
     migrated_to_transactions = models.BooleanField(default=True)
