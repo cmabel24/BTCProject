@@ -11,11 +11,10 @@ from django.http import HttpResponse, Http404
 from hdwallet import HDWallet
 from hdwallet.utils import generate_entropy
 from hdwallet.symbols import BTC as SYMBOL
-from django.utils import timezone
 
 from wallets.forms import CreateWalletForm
 from wallets.models import Key, Transaction, Wallet, PubKey
-
+import wallet.tasks as tasks
 
 class IndexView(ListView):
     model = Key
