@@ -60,9 +60,6 @@ class TransactionListView(ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        id = self.kwargs['pk']
-        # qs = qs.filter(wallet__id=id)
-        # print(qs.values_list("amount",flat=True))
         return qs
 
 class CreateSeedPhrase(FormView):
@@ -140,9 +137,13 @@ class SendView(View):
         context ={"address": address,"return_address":'/wallets/'+ str(id) +'/'}
         context['form']= AddressForm()
         return render(request, "wallets/send.html", context)
-    def post(self,request):
+    def post(self,request, **kwargs):
         form = AddressForm(request.POST)
         if form.is_valid():
+            template_name = "wallets/details.html"
             # This is where you pull the data from the form.
-            redirect_url = reverse("Django Bitcoin:transaction_list")
-            return redirect(redirect_url)
+            id = kwargs['pk']
+            wallet = Wallet.objects.get(id=id)
+            address = wallet.get_address()
+            context = {"address": address,"return_address":'/wallets/'+ str(id) +'/'}
+            return redirect(context["return_address"])
