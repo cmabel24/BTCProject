@@ -12,7 +12,7 @@ from cc.models import Wallet, WithdrawTransaction
 class CreateWalletForm(forms.ModelForm):
     """This is just a descriptor for what this class does."""
     class Meta:
-        fields = ["label"]
+        fields = ["label","currency"]
         model = Wallet
 
 
