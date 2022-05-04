@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Bitcoin Wallet</title>
+        <title>Recieve Bitcoin</title>
         <script>
 
             //  This function communicates with django (backend)
@@ -23,27 +23,13 @@
 
         </script>
     </head>
+    
     <body>
-        <h1>Your Wallet </h1>
-        <button data-section="1" onclick = "location.href = 'create/'" name = 'Create'>Create</button>
-        {% block content %}
-        <h1>Wallet List</h1>
-        {% if wallet_list %}
-        <ul>
-          {% for Wallet in wallet_list %}
-            <li>
-              <a href="{{ Wallet.id }}">{{ Wallet.label}}</a>
-            </li>
-          {% endfor %}
-        </ul>
-        {% else %}
-          <p>There are no wallets in this account.</p>
-        {% endif %}
-      {% endblock %}
-        <!-- Contents loaded from server is inserted here by javascript -->
-        <div id="content">
-
-        </div>
-    </body>
-
-</html>
+        <span> {{ address }} </span>
+        
+        <form action={{return_address}} method='GET'>
+            <button type='submit'>Exit</button>
+        </form>
+    <body>
+    
+<html>

@@ -7,15 +7,21 @@ from unicodedata import name
 from base58 import b58encode, b58decode
 from django import forms
 from django.core.exceptions import ValidationError
-from wallets.models import Wallet
+from cc.models import Wallet, WithdrawTransaction
 
 class CreateWalletForm(forms.ModelForm):
     """This is just a descriptor for what this class does."""
     class Meta:
-        fields = ["name"]
+        fields = ["label"]
         model = Wallet
 
-    # xprivate_key = forms.CharField(max_length=111)
+
+class AddressForm(forms.ModelForm):
+    """This is just a descriptor for what this class does."""
+    class Meta:
+        fields = ["address","amount"]
+        model = WithdrawTransaction
+
 
 
 class BCAddressField(forms.CharField):

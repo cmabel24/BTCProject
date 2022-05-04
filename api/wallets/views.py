@@ -5,16 +5,18 @@ from uuid import UUID
 from typing import Optional
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
-from django.views.generic import ListView, FormView, DetailView, CreateView
+from django.views.generic import ListView, FormView, View,DetailView, CreateView
 from django.template.response import TemplateResponse
 from django.http import HttpResponse, Http404
 from hdwallet import HDWallet
 from hdwallet.utils import generate_entropy
 from hdwallet.symbols import BTC as SYMBOL
 
-from wallets.forms import CreateWalletForm
-from wallets.models import Key, Transaction, Wallet, PubKey
-import wallet.tasks as tasks
+from wallets.forms import CreateWalletForm, AddressForm
+from wallets.models import Key, PubKey #, Transaction, Wallet
+
+from cc.models import Transaction, Wallet
+import cc.tasks as tasks
 
 class IndexView(ListView):
     model = Key
@@ -50,17 +52,17 @@ class IndexView(ListView):
 
     def get_queryset(self):
         """Return the last five wallets."""
-        return self.model.objects.all().order_by("-created_at")[:5]
+        return self.model.objects.all()
 
 class TransactionListView(ListView):
-    model =Transaction
+    model = Transaction
     template_name = 'wallets/details.html'
 
     def get_queryset(self):
         qs = super().get_queryset()
         id = self.kwargs['pk']
-        qs = qs.filter(wallet__id=id).order_by("-created_at")[:5]
-        print(qs.values_list("amount",flat=True))
+        # qs = qs.filter(wallet__id=id)
+        # print(qs.values_list("amount",flat=True))
         return qs
 
 class CreateSeedPhrase(FormView):
@@ -117,4 +119,30 @@ class CreateSeedPhrase(FormView):
             data.save()
             data.keys.set([pub_key])
             redirect_url = reverse("Django Bitcoin:wallet_list")
+            return redirect(redirect_url)
+
+class RecieveView(View):
+    template_name = "wallets/recieve.html"
+
+    def get(self, request, **kwargs):
+        id = kwargs['pk']
+        wallet = Wallet.objects.get(id=id)
+        address = wallet.get_address()
+        context = {"address": address,"return_address":'/wallets/'+ str(id) +'/'}
+        return render(request, self.template_name, context)
+
+class SendView(View):
+    template_name = "wallets/send.html"
+    def get(self,request, **kwargs):
+        id = kwargs['pk']
+        wallet = Wallet.objects.get(id=id)
+        address = wallet.get_address()
+        context ={"address": address,"return_address":'/wallets/'+ str(id) +'/'}
+        context['form']= AddressForm()
+        return render(request, "wallets/send.html", context)
+    def post(self,request):
+        form = AddressForm(request.POST)
+        if form.is_valid():
+            # This is where you pull the data from the form.
+            redirect_url = reverse("Django Bitcoin:transaction_list")
             return redirect(redirect_url)

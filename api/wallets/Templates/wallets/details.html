@@ -28,6 +28,8 @@
         <form action='/wallets/' method='GET'>
             <button type='submit'>Exit</button>
         </form>
+            <button data-section="1" onclick = "location.href = 'recieve/'" name = 'Recieve'>Recieve</button>
+            <button data-section="2" onclick = "location.href = 'send/'" name = 'Send'>Send</button>
         {% block content %}
             <h1>Transaction List</h1>
         <ul>
