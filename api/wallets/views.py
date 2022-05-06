@@ -64,9 +64,6 @@ class TransactionListView(ListView):
 
 class CreateSeedPhrase(FormView):
     """Creates the Seed Phrase"""
-    # mnemo = Mnemonic("english")
-    # words = mnemo.generate(strength=128)
-    # seed = mnemo.to_seed(words, passphrase="")
     # Choose strength 128, 160, 192, 224 or 256
     STRENGTH: int = 160  # Default is 128
     # Choose language english, french, italian, spanish, chinese_simplified, chinese_traditional, japanese or korean
@@ -84,12 +81,6 @@ class CreateSeedPhrase(FormView):
 
     # Derivation from path
     hdwallet.from_path("m/44'/0'/0'/0/0")
-    # Or derivation from index
-    # hdwallet.from_index(44, hardened=True)
-    # hdwallet.from_index(0, hardened=True)
-    # hdwallet.from_index(0, hardened=True)
-    # hdwallet.from_index(0)
-    # hdwallet.from_index(0)
     mnemonic_phrase = hdwallet.dumps()["mnemonic"]
     
 
