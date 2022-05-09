@@ -5,7 +5,7 @@ from uuid import UUID
 from typing import Optional
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
-from django.views.generic import ListView, FormView, View,DetailView, CreateView
+from django.views.generic import ListView, FormView, View, DetailView, CreateView
 from django.template.response import TemplateResponse
 from django.http import HttpResponse, Http404
 from hdwallet import HDWallet
@@ -61,6 +61,10 @@ class TransactionListView(ListView):
     def get_queryset(self):
         qs = super().get_queryset()
         return qs
+    
+    def refresh_transactions(self):
+        tasks.query_transactions("tbtc")
+
 
 class CreateSeedPhrase(FormView):
     """Creates the Seed Phrase"""

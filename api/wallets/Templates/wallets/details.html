@@ -30,6 +30,9 @@
         </form>
             <button data-section="1" onclick = "location.href = 'recieve/'" name = 'Recieve'>Recieve</button>
             <button data-section="2" onclick = "location.href = 'send/'" name = 'Send'>Send</button>
+            <form action={{ return_address }}>
+                <button type='submit'>Refresh</button>
+            </form>
         {% block content %}
             <h1>Transaction List</h1>
         <ul>
