@@ -1,5 +1,6 @@
 import datetime
 from multiprocessing import context
+from decimal import Decimal
 # import json
 from uuid import UUID
 from typing import Optional
@@ -15,7 +16,7 @@ from hdwallet.symbols import BTC as SYMBOL
 from wallets.forms import CreateWalletForm, AddressForm
 from wallets.models import Key, PubKey #, Transaction, Wallet
 
-from cc.models import Transaction, Wallet
+from cc.models import Transaction, Wallet, WithdrawTransaction
 import cc.tasks as tasks
 
 class IndexView(ListView):
@@ -135,10 +136,12 @@ class SendView(View):
     def post(self,request, **kwargs):
         form = AddressForm(request.POST)
         if form.is_valid():
-            template_name = "wallets/details.html"
+            # template_name = "wallets/details.html"
             # This is where you pull the data from the form.
             id = kwargs['pk']
             wallet = Wallet.objects.get(id=id)
             address = wallet.get_address()
+            data: WithdrawTransaction = form.save(commit=False)
+            wallet.withdraw_to_address(data.address, Decimal(data.amount))
             context = {"address": address,"return_address":'/wallets/'+ str(id) +'/'}
             return redirect(context["return_address"])

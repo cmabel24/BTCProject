@@ -32,7 +32,7 @@
         <ul>
           {% for Wallet in wallet_list %}
             <li>
-              <a href="{{ Wallet.id }}">{{ Wallet.label}}</a>
+              <a href="{{ Wallet.id }}">{{Wallet.label}} - {{Wallet.balance}} - {{Wallet.holded}} - {{Wallet.unconfirmed}}</a>
             </li>
           {% endfor %}
         </ul>

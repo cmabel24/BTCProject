@@ -37,7 +37,7 @@
             <h1>Transaction List</h1>
         <ul>
             {% for tx in object_list %}
-                <li>{{tx.created}} - {{tx.amount}}</li>
+                <li>{{tx.txid}} - {{tx.currency}} - {{tx.processed}}</li>
             {% empty %}
                 <p>There are no transactions in this wallet.</p>
             {% endfor %}
